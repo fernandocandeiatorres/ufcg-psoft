@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Atvprat2Application {
 
     public static void main(String[] args) {
+        System.out.println("oi");
         SpringApplication.run(Atvprat2Application.class, args);
     }
 

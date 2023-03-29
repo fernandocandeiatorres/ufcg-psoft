@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class VolatilLoteRepository implements LoteRepository<Lote, Long> {
@@ -14,12 +15,17 @@ public class VolatilLoteRepository implements LoteRepository<Lote, Long> {
     @Override
     public Lote save(Lote lote) {
         lotes.add(lote);
-        return lotes.stream().findFirst().get();
+        return lotes.get(lotes.size() - 1);
     }
 
     @Override
     public Lote find(Long id) {
-        return lotes.get(Integer.parseInt("" + id));
+        for(Lote lote : lotes){
+            if(Objects.equals(lote.getId(), id)){
+                return lote;
+            }
+        }
+        throw new RuntimeException("Lote não existe no repositorio");
     }
 
     @Override
@@ -35,7 +41,7 @@ public class VolatilLoteRepository implements LoteRepository<Lote, Long> {
 
     @Override
     public void delete(Lote lote) {
-        lotes.clear();
+        lotes.remove(lote);
     }
 
     @Override
