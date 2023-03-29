@@ -16,6 +16,9 @@ public class ProdutoAlterarImplService implements ProdutoAlterarService {
         if (produtoalterado.getPreco()<=0){
             throw new RuntimeException("Preço Inválido");
         }
+        if (produtoalterado.getNome().trim().equals("") || produtoalterado.getFabricante().trim().equals("")){
+            throw new RuntimeException("O produto/fabricante precisa ter nome");
+        }
         return produtoRepository.update(produtoalterado);
     }
 }

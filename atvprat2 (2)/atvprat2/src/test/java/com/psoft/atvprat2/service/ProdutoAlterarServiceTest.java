@@ -33,7 +33,7 @@ public class ProdutoAlterarServiceTest {
     void setup(){
         Mockito.when(produtoRepository.find(10L))
                 .thenReturn(Produto.builder()
-                        .id(1L)
+                        .id(10L)
                         .nome("Produto Dez")
                         .codigoBarra("123456789")
                         .fabricante("Fabricante Dez")
@@ -43,7 +43,7 @@ public class ProdutoAlterarServiceTest {
         produto = produtoRepository.find(10L);
         Mockito.when(produtoRepository.update(produto))
                 .thenReturn(Produto.builder()
-                        .id(1L)
+                        .id(10L)
                         .nome("Nome Produto Alterado")
                         .codigoBarra("123456789")
                         .fabricante("Nome Fabricante Alterado")
@@ -67,13 +67,48 @@ public class ProdutoAlterarServiceTest {
     }
 
     @Test
+    @DisplayName("Quando altero o nome do fabricante com um nome válido")
+    void alterarNomeDoFabricante(){
+        /* AAA */
+        // Arrange
+        produto.setFabricante("Novo Fabricante Alterado");
+        //Act
+        Produto resultado = driver.alterar(produto);
+
+        //Assert
+        assertEquals("Nome Fabricante Alterado", resultado.getFabricante());
+    }
+
+    @Test
+    @DisplayName("Quando altero o nome do fabricante com um nome INVÁLIDO")
+    void alterarNomeDoFabricanteInvalido(){
+        /* AAA */
+        // Arrange
+        produto.setFabricante("   ");
+        //Act
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class, () -> driver.alterar(produto)
+        );
+
+        //Assert
+        assertEquals("O produto/fabricante precisa ter nome", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Quando altero o nome do produto com um nome INVÁLIDO")
+    void alterarNomeDoProdutoInvalido(){
+        produto.setNome("");
+
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> driver.alterar(produto));
+
+        assertEquals("O produto/fabricante precisa ter nome", thrown.getMessage());
+    }
+
+    @Test
     @DisplayName("Quando o preco é menor ou igual a zero")
     void precoMenorOuIgualAZero(){
         //Arrange
         produto.setPreco(0.0);
-
-        //Act
-        Produto resultado = driver.alterar(produto);
 
         //Assert
         RuntimeException thrown = assertThrows(
@@ -81,6 +116,16 @@ public class ProdutoAlterarServiceTest {
 
         assertEquals("Preço Inválido", thrown.getMessage());
     }
+
+    @Test
+    @DisplayName("Quando o preço é maior que zero")
+    void precoMaiorQueZero() {
+        produto.setPreco(126.3);
+
+        assertEquals(126.3, produto.getPreco());
+    }
+
+
 
 
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class VolatilLoteRepositoryTest {
@@ -126,6 +127,17 @@ public class VolatilLoteRepositoryTest {
     }
 
     @Test
+    @DisplayName("Tentar recuperar lote que não existe no repositorio por meio do ID")
+    void findInvalidTest() {
+
+
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class, () -> driver.find(1L));
+
+        assertEquals("Lote não existe no repositorio", thrown.getMessage());
+    }
+
+    @Test
     @DisplayName("Recuperar os lotes adicionados no repositorio.")
     void findAllTest() {
         Produto produtoExtra = Produto.builder()
@@ -141,6 +153,7 @@ public class VolatilLoteRepositoryTest {
                 .produto(produtoExtra)
                 .build();
         driver.save(lote);
+        driver.save(loteExtra);
 
         List<Lote> saidaEsperada = new ArrayList<>();
         saidaEsperada.add(lote);
