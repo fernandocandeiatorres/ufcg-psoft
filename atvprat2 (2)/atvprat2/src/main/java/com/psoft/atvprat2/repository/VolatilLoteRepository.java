@@ -12,20 +12,31 @@ public class VolatilLoteRepository implements LoteRepository<Lote, Long> {
 
     List<Lote> lotes = new ArrayList<>();
 
+//    @Override
+//    public Lote save(Lote lote) {
+//        lotes.add(lote);
+//        return lotes.get(lotes.size() - 1);
+//    }
+
     @Override
     public Lote save(Lote lote) {
         lotes.add(lote);
-        return lotes.get(lotes.size() - 1);
+        return lotes.stream().findFirst().get();
     }
+
+//    @Override
+//    public Lote find(Long id) {
+//        for(Lote lote : lotes){
+//            if(Objects.equals(lote.getId(), id)){
+//                return lote;
+//            }
+//        }
+//        throw new RuntimeException("Lote não existe no repositorio");
+//    }
 
     @Override
     public Lote find(Long id) {
-        for(Lote lote : lotes){
-            if(Objects.equals(lote.getId(), id)){
-                return lote;
-            }
-        }
-        throw new RuntimeException("Lote não existe no repositorio");
+        return lotes.get(Integer.parseInt("" + id));
     }
 
     @Override
@@ -39,9 +50,14 @@ public class VolatilLoteRepository implements LoteRepository<Lote, Long> {
         return lotes.stream().findFirst().orElse(null);
     }
 
+//    @Override
+//    public void delete(Lote lote) {
+//        lotes.remove(lote);
+//    }
+
     @Override
     public void delete(Lote lote) {
-        lotes.remove(lote);
+        lotes.clear();
     }
 
     @Override
