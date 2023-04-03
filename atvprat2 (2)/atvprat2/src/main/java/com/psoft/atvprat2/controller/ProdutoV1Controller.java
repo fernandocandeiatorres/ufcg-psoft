@@ -4,6 +4,7 @@ import com.psoft.atvprat2.model.Produto;
 import com.psoft.atvprat2.repository.ProdutoRepository;
 import com.psoft.atvprat2.service.ProdutoAlterarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,14 +18,12 @@ public class ProdutoV1Controller {
     @Autowired
     ProdutoAlterarService produtoAlterarService;
 
-    @Autowired
-    ProdutoRepository produtoRepository;
+
 
     @PutMapping("/{id}")
     public Produto updateProduct(
             @PathVariable Long id,
-            @RequestBody
-            Produto produto) {
+            @RequestBody Produto produto) {
         return produtoAlterarService.alterar(produto);
     }
 

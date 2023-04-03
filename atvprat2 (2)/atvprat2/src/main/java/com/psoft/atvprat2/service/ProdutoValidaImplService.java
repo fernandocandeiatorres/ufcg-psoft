@@ -3,11 +3,13 @@ package com.psoft.atvprat2.service;
 import com.psoft.atvprat2.model.Produto;
 import com.psoft.atvprat2.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProdutoValidaImplService implements ProdutoValidaService {
 
+    @Qualifier("produtoVolatilRepository")
     @Autowired
     ProdutoRepository<Produto, Long> produtoRepository;
 
