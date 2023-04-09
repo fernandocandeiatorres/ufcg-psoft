@@ -1,10 +1,8 @@
 package com.psoft.atvprat2.controller;
 
 import com.psoft.atvprat2.model.Produto;
-import com.psoft.atvprat2.repository.ProdutoRepository;
 import com.psoft.atvprat2.service.ProdutoAlterarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

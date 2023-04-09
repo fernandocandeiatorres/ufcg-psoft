@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProdutoValidaImplService implements ProdutoValidaService {
 
-    @Qualifier("produtoVolatilRepository")
     @Autowired
     ProdutoRepository<Produto, Long> produtoRepository;
 

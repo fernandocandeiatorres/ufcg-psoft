@@ -5,6 +5,7 @@ import com.psoft.atvprat2.model.Produto;
 import com.psoft.atvprat2.repository.ProdutoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,39 +24,66 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Testes do Controlador de Produtos")
 public class ProdutoV1ControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+    @SpringBootTest
+    @AutoConfigureMockMvc
+    @DisplayName("Testes do controlador de Produtos")
+    public class ProdutoV1ControllerTests {
+        @Autowired
+        MockMvc driver;
 
-    Produto produto;
+        @Autowired
+        ProdutoRepository<Produto, Long> produtoRepository;
 
-    @Qualifier("produtoVolatilStubRepository")
-    @Autowired
-    ProdutoRepository<Produto, Long> produtoRepository;
+        ObjectMapper objectMapper = new ObjectMapper();
 
-    ObjectMapper objectMapper = new ObjectMapper();
+        Produto produto;
 
-    @BeforeEach
-    void setup() {
-        produto = produtoRepository.find(10L);
-    }
+        @BeforeEach
+        void setup() {
+            produto = produtoRepository.find(10L);
+        }
 
-    @Test
-    @DisplayName("Quando altero produto com nome válido")
-    void alteroProdutoCOmNomeValido() throws Exception {
-        // Arrange
-        produto.setNome("Produto Dez Alterado");
+        @AfterEach
+        void tearDown() {
+            produto = null;
+        }
 
-        // Act
-        String produtoModificadoJSONString = mockMvc.perform(
-                put("/v1/produtos/" + produto.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(produto)))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn().getResponse().getContentAsString();
+        @Nested
+        @DisplayName("Conjunto de casos de verificação de campos obrigatórios")
+        class ProdutoValidacaoCamposObrigatorios {
 
-        // Assert
-        Produto produtoModificado = objectMapper.readValue(produtoModificadoJSONString, Produto.ProdutoBuilder.class).build();
-        assertEquals("Produto Dez Alterado", produtoModificado.getNome());
+            @Test
+            @DisplayName("Quando alteramos o nome do produto com dados válidos")
+            void quandoAlteramosNomeDoProdutoValido() throws Exception {
+                // Arrange
+                produto.setNome("Produto Dez Alterado");
+
+                // Act
+                String responseJsonString = driver.perform(put("/v1/produtos/" + produto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(produto)))
+                        .andExpect(status().isOk())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+
+                Produto resultado = objectMapper.readValue(responseJsonString, Produto.ProdutoBuilder.class).build();
+
+                // Assert
+                assertEquals(resultado.getNome(), "Produto Dez Alterado");
+            }
+
+        }
+
+        @Nested
+        @DisplayName("Conjunto de casos de verificação da regra sobre o preço")
+        class ProdutoValidacaoRegrasDoPreco {
+            // Implementar os testes aqui
+        }
+
+        @Nested
+        @DisplayName("Conjunto de casos de verificação da validação do código de barras")
+        class ProdutoValidacaoCodigoDeBarras {
+            // Implementar os testes aqui
+        }
     }
 }
