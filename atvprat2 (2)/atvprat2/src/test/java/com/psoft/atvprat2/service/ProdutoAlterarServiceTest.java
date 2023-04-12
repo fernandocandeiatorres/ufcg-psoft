@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -65,6 +66,8 @@ public class ProdutoAlterarServiceTest {
         //Assert
         assertEquals("Nome Produto Alterado", resultado.getNome());
     }
+
+
 
     @Test
     @DisplayName("Quando altero o nome do fabricante com um nome válido")
@@ -125,7 +128,52 @@ public class ProdutoAlterarServiceTest {
         assertEquals(126.3, produto.getPreco());
     }
 
+    @Test
+    @DisplayName("Quando um novo codigo De Barras válido for fornecido para o produto")
+    void quandoNovoCodigoDeBarrasValido() {
+        // Arrange
+        produto.setCodigoBarra("123456789");
 
+        // Act
+
+        Produto resultado = driver.alterar(produto);
+
+        // Assert
+        assertEquals("123456789", resultado.getCodigoBarra());
+    }
+
+
+    @Test
+    @DisplayName("Quando um novo codigo De Barras inválido, for fornecido para o produto")
+    void quandoNovoCodigoDeBarrasInvalido() {
+        // Arrange
+        produto.setCodigoBarra("4012345678902");
+
+        try {
+            // Act
+            driver.alterar(produto);
+            fail("A exceção não foi lançada.");
+        } catch (IllegalArgumentException e) {
+            // Assert
+            assertEquals("O código de Barras informado não é válido.", e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Quando um novo codigo De Barras inválido, for fornecido para o produto")
+    void quandoNovoCodigoDeBarrasInvalido2() {
+        // Arrange
+        produto.setCodigoBarra("40");
+
+        try {
+            // Act
+            driver.alterar(produto);
+            fail("A exceção não foi lançada.");
+        } catch (IllegalArgumentException e) {
+            // Assert
+            assertEquals("O código de Barras informado não é válido.", e.getMessage());
+        }
+    }
 
 
 }

@@ -8,21 +8,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(
-        value="/v1/produtos/",
+        value = "/v1/produtos",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
-
 public class ProdutoV1Controller {
+
     @Autowired
-    ProdutoAlterarService produtoAlterarService;
-
-
+    ProdutoAlterarService produtoAtualizarService;
 
     @PutMapping("/{id}")
-    public Produto updateProduct(
+    public Produto atualizarProduto(
             @PathVariable Long id,
             @RequestBody Produto produto) {
-        return produtoAlterarService.alterar(produto);
+        return produtoAtualizarService.alterar(produto);
     }
-
 }
